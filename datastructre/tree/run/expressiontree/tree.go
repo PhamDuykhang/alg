@@ -1,10 +1,10 @@
-package tree
+package main
 
 type (
 	TreeNode struct {
 		Left  *TreeNode
 		Right *TreeNode
-		Value int
+		Value string
 	}
 
 	Queue struct {
@@ -28,6 +28,10 @@ func (s *Stack) Top() *TreeNode {
 		return nil
 	}
 	return s.A[0]
+}
+
+func (s *Stack) Length() int {
+	return len(s.A)
 }
 
 func (s *Stack) Push(v *TreeNode) {
