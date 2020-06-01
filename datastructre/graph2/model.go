@@ -54,6 +54,53 @@ func (g *Graph) AddEdge(src, dest, w int) {
 	})
 }
 
+func getMin(wl []WeighInfo) WeighInfo {
+	fmt.Println(wl)
+	m := wl[0]
+	for _, w := range wl {
+		if w.W < m.W {
+			m = w
+		}
+	}
+	return m
+}
+
+func (g *Graph) GetConnect(v int) []WeighInfo {
+	var w []WeighInfo
+	for i, el := range g.A[v] {
+		if el > 0 {
+			w = append(w, WeighInfo{
+				S: v,
+				D: i,
+				W: el,
+			})
+		}
+	}
+	return w
+}
+
+func (g *Graph) PrimsMST(src int) []WeighInfo {
+	visited := make([]bool, g.NumV)
+	visited[src] = true
+	ne := g.GetConnect(src)
+	var result []WeighInfo
+	for i := 0; i < g.NumV; i++ {
+		m := getMin(ne)
+		for _, el := range ne {
+			if !visited[el.D] {
+				visited[el.D] = true
+				result = append(result, el)
+			}
+		}
+		ne = g.GetConnect(m.D)
+		if len(ne)==0{
+			break
+		}
+	}
+	return result
+
+}
+
 func (g *Graph) KruskalMST() []WeighInfo {
 	sort.Sort(ByWeight(g.WeighList))
 	var result []WeighInfo
@@ -92,13 +139,24 @@ func main() {
 	g.AddEdge(5, 4, 10)
 
 	g.PrintWeightList()
-
-	res := g.KruskalMST()
+	fmt.Println("-----------Prims----------")
+	res := g.PrimsMST(0)
 	s := 0
 	for _, rl := range res {
 		fmt.Printf("Edge %d---%d Cost %d\n", rl.S, rl.D, rl.W)
 		s = s + rl.W
 	}
+	fmt.Println("---------------------")
+	fmt.Println("Total cost ", s)
+
+	fmt.Println("----------Kruskal-----------")
+	res = g.KruskalMST()
+	s=0
+	for _, rl := range res {
+		fmt.Printf("Edge %d---%d Cost %d\n", rl.S, rl.D, rl.W)
+		s = s + rl.W
+	}
+	fmt.Println("---------------------")
 	fmt.Println("Total cost ", s)
 
 }
