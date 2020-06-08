@@ -36,6 +36,33 @@ func InsertSort(a []int) {
 		a[j] = k
 	}
 }
+
+func QuickSort(a []int) {
+	quick(a, 0, len(a)-1)
+}
+
+func partition(a []int, l, h int) int {
+
+	piv := a[h]
+	smallerIdx := l - 1
+	for j := l; j < h; j++ {
+		if a[j] <= piv {
+			smallerIdx++
+			swap(&a[smallerIdx], &a[j])
+		}
+	}
+	swap(&a[smallerIdx+1], &a[h])
+	return smallerIdx + 1
+}
+
+func quick(a []int, l, h int) {
+	if l < h {
+		p := partition(a, l, h)
+		quick(a, l, p-1)
+		quick(a, p+1, h)
+	}
+}
+
 func MergeSort(a []int) {
 	l := len(a)
 	mergeSort(a, 0, l-1)
@@ -70,7 +97,7 @@ func merge(a []int, l, m, r int) {
 		}
 
 	}
-	k=0
+	k = 0
 	for i := l; i <= r; i++ {
 		a[i] = tem[k]
 		k++
